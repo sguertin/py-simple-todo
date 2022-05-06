@@ -1,0 +1,13 @@
+.idea
+
+*.pyc
+__pycache__
+*.log
+*.tmp
+
+.vs
+.vscode/settings.json
+venv*
+
+build
+dist/windows
