@@ -6,7 +6,7 @@ from logging import Logger, FileHandler
 from rich.logging import RichHandler
 
 from todo.constants import LogLevel, LOGS_DIRECTORY
-from todo.interfaces.log_factory import ILoggingFactory
+from todo.interfaces.factory import ILoggingFactory
 
 
 class LoggingFactory(ILoggingFactory):
@@ -19,7 +19,10 @@ class LoggingFactory(ILoggingFactory):
         logging.basicConfig(
             datefmt="[%Y-%m-%d %H:%M:%S]",
             format="%(name)-20s - %(message)s",
-            handlers=[RichHandler(rich_tracebacks=True), FileHandler(log_file_path, "w+")],
+            handlers=[
+                RichHandler(rich_tracebacks=True),
+                FileHandler(log_file_path, "w+"),
+            ],
             level=LogLevel.NOTSET,
         )
 
@@ -30,3 +33,16 @@ class LoggingFactory(ILoggingFactory):
         log = logging.getLogger(name)
         log.setLevel(self._log_level)
         return log
+
+
+class TestLoggingFactory(LoggingFactory):
+    def __init__(self, log_level: LogLevel = LogLevel.INFO):
+        self._log_level = log_level
+        logging.basicConfig(
+            datefmt="[%Y-%m-%d %H:%M:%S]",
+            format="%(name)-20s - %(message)s",
+            handlers=[
+                RichHandler(rich_tracebacks=True),
+            ],
+            level=LogLevel.NOTSET,
+        )
