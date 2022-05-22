@@ -1,4 +1,4 @@
-from datetime import datetime, timedelta
+from datetime import datetime
 from logging import Logger
 from typing import Optional
 from uuid import UUID
@@ -6,30 +6,47 @@ from uuid import UUID
 import PySimpleGUI as sg
 
 from todo.constants import UiKeys
-from todo.interfaces.log_factory import ILoggingFactory
+from todo.interfaces.factory import (
+    IListViewFactory,
+    IManageItemViewFactory,
+    ILoggingFactory,
+)
 from todo.interfaces.todo_file import ITodoFileService
-from todo.interfaces.todo_list import ITodoListUiService
+from todo.interfaces.todo_list import IListUiService
 from todo.models.todo_file import TodoItem, TodoList
-from todo.views.todo_list import ManageTodoItemViewFactory, TodoListViewFactory
 
 
-class TodoListUiService(ITodoListUiService):
+def extract_id(event, key) -> UUID:
+    return UUID(str(event).replace(str(key), ""))
+
+
+class ListUiService(IListUiService):
     log: Logger
     file_service: ITodoFileService
+    manage_view_factory: IManageItemViewFactory
+    list_view_factory: IListViewFactory
 
-    def __init__(self, log_factory: ILoggingFactory, file_service: ITodoFileService):
+    def __init__(
+        self,
+        log_factory: ILoggingFactory,
+        file_service: ITodoFileService,
+        list_view_factory: IListViewFactory,
+        manage_view_factory: IManageItemViewFactory,
+    ):
+        self.manage_view_factory = manage_view_factory
         self.log = log_factory.get_logger("TodoListView")
+        self.list_view_factory = list_view_factory
         self.file_service = file_service
 
     def run(self) -> None:
-        self.log.info("Starting TodoListView")
+        self.log.debug("Starting TodoListView")
         while self._run():
             self.log.debug("Refreshing TodoListView")
-        self.log.info("Closing TodoListView")
+        self.log.debug("Closing TodoListView")
 
     def _run(self) -> bool:
         todo_list = self.file_service.load()
-        window = TodoListViewFactory.create(todo_list)
+        window = self.list_view_factory.create(todo_list)
         while True:
             event, values = window.read()
             self.log.debug("Event %s received", event)
@@ -38,15 +55,15 @@ class TodoListUiService(ITodoListUiService):
                 return True
             elif event == UiKeys.NEW:
                 window.close()
-                self.manage_todo_item()
+                self.manage_item(todo_list)
                 return True
             elif str(event).startswith(UiKeys.EDIT):
-                id = UUID(str(event).replace(UiKeys.EDIT.value, ""))
+                id = extract_id(event, UiKeys.EDIT)
                 window.close()
-                self.manage_todo_item(todo_list.todo_dict[id])
+                self.manage_item(todo_list, todo_list.todo_dict[id])
                 return True
             elif str(event).startswith(UiKeys.COMPLETED):
-                id = UUID(str(event).replace(UiKeys.COMPLETED.value, ""))
+                id = extract_id(event, UiKeys.COMPLETED)
                 todo_item = todo_list.todo_dict[id]
                 todo_item.completed = values[event]
                 self.file_service.save(todo_list)
@@ -61,14 +78,12 @@ class TodoListUiService(ITodoListUiService):
         else:
             raise Exception("Todo Item already exists!")
 
-    def manage_todo_item(
-        self, todo_list: TodoList, todo_item: Optional[TodoItem] = None
-    ):
+    def manage_item(self, todo_list: TodoList, todo_item: Optional[TodoItem] = None):
         new = False
         if todo_item is None:
             todo_item = TodoItem()
             new = True
-        view = ManageTodoItemViewFactory.create(todo_list, todo_item, new)
+        view = self.manage_view_factory.create(todo_list, todo_item, new)
         while True:
             event, values = view.read()
             if event == UiKeys.SET_CATEGORY:

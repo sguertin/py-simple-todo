@@ -4,16 +4,13 @@ from typing import Optional
 from todo.models.todo_file import TodoItem, TodoList
 
 
-class ITodoListUiService(metaclass=ABCMeta):
+class IListUiService(metaclass=ABCMeta):
     @classmethod
     def __subclasshook__(cls, subclass):
         return (
             (hasattr(subclass, "run") and callable(subclass.run))
             and (hasattr(subclass, "add_item") and callable(subclass.add_item))
-            and (
-                hasattr(subclass, "manage_todo_item")
-                and callable(subclass.manage_todo_item)
-            )
+            and (hasattr(subclass, "manage_item") and callable(subclass.manage_item))
             or NotImplemented
         )
 
@@ -22,6 +19,7 @@ class ITodoListUiService(metaclass=ABCMeta):
         """Runs the main UI loop for the Todo List"""
         raise NotImplementedError()
 
+    @abstractmethod
     def add_item(self, todo_list: TodoList, new_item: TodoItem) -> None:
         """Add a new todo item to the list and save the update
 
@@ -34,9 +32,8 @@ class ITodoListUiService(metaclass=ABCMeta):
         """
         raise NotImplementedError()
 
-    def manage_todo_item(
-        self, todo_list: TodoList, todo_item: Optional[TodoItem] = None
-    ):
+    @abstractmethod
+    def manage_item(self, todo_list: TodoList, todo_item: Optional[TodoItem] = None):
         """Launches a UI for creating or editing a Todo Item
 
         Args:
