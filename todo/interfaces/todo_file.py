@@ -2,7 +2,7 @@ from abc import ABCMeta, abstractmethod
 from todo.models.todo_file import TodoList
 
 
-class ITodoFileService(metaclass=ABCMeta):
+class IFileService(metaclass=ABCMeta):
     @classmethod
     def __subclasshook__(cls, subclass):
         return (

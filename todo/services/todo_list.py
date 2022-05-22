@@ -11,7 +11,7 @@ from todo.interfaces.factory import (
     IManageItemViewFactory,
     ILoggingFactory,
 )
-from todo.interfaces.todo_file import ITodoFileService
+from todo.interfaces.todo_file import IFileService
 from todo.interfaces.todo_list import IListUiService
 from todo.models.todo_file import TodoItem, TodoList
 
@@ -22,14 +22,14 @@ def extract_id(event, key) -> UUID:
 
 class ListUiService(IListUiService):
     log: Logger
-    file_service: ITodoFileService
+    file_service: IFileService
     manage_view_factory: IManageItemViewFactory
     list_view_factory: IListViewFactory
 
     def __init__(
         self,
         log_factory: ILoggingFactory,
-        file_service: ITodoFileService,
+        file_service: IFileService,
         list_view_factory: IListViewFactory,
         manage_view_factory: IManageItemViewFactory,
     ):

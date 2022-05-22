@@ -1,15 +1,14 @@
 from json import JSONDecodeError
 from logging import Logger
 
-
 from todo.constants import TODO_FILE
 from todo.decorators import fire_and_forget
-from todo.interfaces.log_factory import ILoggingFactory
-from todo.interfaces.todo_file import ITodoFileService
+from todo.interfaces.factory import ILoggingFactory
+from todo.interfaces.todo_file import IFileService
 from todo.models.todo_file import TodoList
 
 
-class TodoFileService(ITodoFileService):
+class FileService(IFileService):
     log: Logger
 
     def __init__(self, log_factory: ILoggingFactory):
