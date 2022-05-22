@@ -9,7 +9,7 @@ from todo.interfaces.factory import (
     IListViewFactory,
 )
 from todo.models.todo_file import TodoItem, TodoList
-from todo.views.todo_list import ManageItemView, ItemView, ListView
+from todo.views.list_view import ManageItemView, ItemView, ListView
 
 
 class ManageItemViewFactory(IManageItemViewFactory):
