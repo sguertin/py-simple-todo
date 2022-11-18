@@ -3,6 +3,8 @@ from datetime import datetime, time
 from uuid import uuid4, UUID
 from dataclasses_json import DataClassJsonMixin
 
+from todo_list.models.enum import StringEnum
+
 
 @dataclass
 class TimeEntry(DataClassJsonMixin):
@@ -65,3 +67,20 @@ class TodoList(DataClassJsonMixin):
         self.created = today
         self.updated = today
         self.todo_items = []
+
+
+class UiKeys(StringEnum):
+    CANCEL = "Cancel"
+    CATEGORY = "-CATEGORY-"
+    COMPLETED = "COMPLETED-"
+    DESCRIPTION = "-DESCRIPTION-"
+    DUE_DATE = "-DUE-DATE-"
+    EDIT = "EDIT-"
+    NEW = "-NEW-"
+    QUIT = "-QUIT-"
+    REFRESH = "-REFRESH-"
+    SAVE = "-SAVE-"
+    SET_CATEGORY = "-SET-CATEGORY-"
+    SUBMIT = "Submit"
+    TIMEOUT = "-TIMEOUT-"
+    TITLE = "-TITLE-"

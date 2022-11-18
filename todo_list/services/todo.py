@@ -5,7 +5,7 @@ from uuid import UUID
 
 import PySimpleGUI as sg
 
-from todo_list.constants import UiKeys
+from todo_list.models.events import Events
 from todo_list.interfaces.factory import (
     IListViewFactory,
     IManageItemViewFactory,
@@ -13,7 +13,7 @@ from todo_list.interfaces.factory import (
 )
 from todo_list.interfaces.file import IFileService
 from todo_list.interfaces.todo import IListUiService
-from todo_list.models.todo import TodoItem, TodoList
+from todo_list.models.todo import TodoItem, TodoList, UiKeys
 
 
 def extract_id(event, key) -> UUID:
@@ -50,24 +50,24 @@ class ListUiService(IListUiService):
         while True:
             event, values = window.read()
             self.log.debug("Event %s received", event)
-            if event == UiKeys.REFRESH:
+            if event == Events.REFRESH:
                 window.close()
                 return True
-            elif event == UiKeys.NEW:
+            elif event == Events.NEW:
                 window.close()
                 self.manage_item(todo_list)
                 return True
-            elif str(event).startswith(UiKeys.EDIT):
-                id = extract_id(event, UiKeys.EDIT)
+            elif event == Events.EDIT:
+                id = extract_id(event, Events.EDIT)
                 window.close()
                 self.manage_item(todo_list, todo_list.todo_dict[id])
                 return True
-            elif str(event).startswith(UiKeys.COMPLETED):
-                id = extract_id(event, UiKeys.COMPLETED)
+            elif event == Events.COMPLETED:
+                id = extract_id(event, Events.COMPLETED)
                 todo_item = todo_list.todo_dict[id]
                 todo_item.completed = values[event]
                 self.file_service.save(todo_list)
-            elif event in (sg.WIN_CLOSED, UiKeys.QUIT):
+            elif event in (sg.WIN_CLOSED, Events.EXIT):
                 return False
             window.refresh()
 
@@ -86,9 +86,9 @@ class ListUiService(IListUiService):
         view = self.manage_view_factory.create(todo_list, todo_item, new)
         while True:
             event, values = view.read()
-            if event == UiKeys.SET_CATEGORY:
+            if event == Events.SET_CATEGORY:
                 view.update_category(values[UiKeys.SET_CATEGORY])
-            if event == UiKeys.SUBMIT:
+            if event == Events.SAVE:
                 todo_item.title = values[UiKeys.TITLE]
                 todo_item.description = values[UiKeys.DESCRIPTION]
                 todo_item.category = values[UiKeys.CATEGORY]
@@ -100,6 +100,6 @@ class ListUiService(IListUiService):
                 except Exception as e:
                     self.log.exception(e)
                 self.file_service.save(todo_list)
-            if event in (UiKeys.SUBMIT, UiKeys.CANCEL):
+            if event in (Events.SAVE, Events.CANCEL):
                 view.close()
                 break
