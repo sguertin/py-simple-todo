@@ -2,14 +2,14 @@ from datetime import datetime, timedelta
 
 import PySimpleGUI as sg
 
-from todo.constants import UiKeys
-from todo.interfaces.factory import (
+from todo_list.constants import UiKeys
+from todo_list.interfaces.factory import (
     IManageItemViewFactory,
     IItemViewFactory,
     IListViewFactory,
 )
-from todo.models.todo_file import TodoItem, TodoList
-from todo.views.list_view import ManageItemView, ItemView, ListView
+from todo_list.models.todo import TodoItem, TodoList
+from todo_list.views.list_view import ManageItemView, ItemView, ListView
 
 
 class ManageItemViewFactory(IManageItemViewFactory):

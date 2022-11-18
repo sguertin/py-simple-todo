@@ -1,8 +1,8 @@
 from abc import ABCMeta, abstractmethod
-from todo.models.settings import Settings
+from todo_list.models.todo import TodoList
 
 
-class ISettingsProvider(metaclass=ABCMeta):
+class IFileService(metaclass=ABCMeta):
     @classmethod
     def __subclasshook__(cls, subclass):
         return (
@@ -12,20 +12,20 @@ class ISettingsProvider(metaclass=ABCMeta):
         )
 
     @abstractmethod
-    def load(self) -> Settings:
-        """Loads settings
+    def load(self) -> TodoList:
+        """Loads the todo list from the working directory, or creates a new one
 
         Returns:
-            Settings: The retrieved settings
+            TodoList: The current todo list or a new one if a file was not found
         """
         raise NotImplementedError()
 
     @abstractmethod
-    def save(self, settings: Settings) -> None:
-        """Saves the provided settings
+    def save(self, todo_list: TodoList) -> None:
+        """Saves todo list to the file system in the user's default directory
 
         Args:
-            settings (Settings): The settings to be saved
+            todo_list (TodoList): the todo list to be saved
 
         """
         raise NotImplementedError()

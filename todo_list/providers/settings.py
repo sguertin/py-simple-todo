@@ -1,7 +1,7 @@
-from todo.constants import SETTINGS_FILE
-from todo.decorators import fire_and_forget
-from todo.interfaces.settings import ISettingsProvider
-from todo.models.settings import Settings
+from todo_list.constants import SETTINGS_FILE
+from todo_list.decorators import fire_and_forget
+from todo_list.interfaces.settings import ISettingsProvider
+from todo_list.models.settings import Settings
 
 
 class MockSettingsProvider(ISettingsProvider):

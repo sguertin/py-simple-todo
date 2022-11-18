@@ -5,15 +5,15 @@ from uuid import UUID
 
 import PySimpleGUI as sg
 
-from todo.constants import UiKeys
-from todo.interfaces.factory import (
+from todo_list.constants import UiKeys
+from todo_list.interfaces.factory import (
     IListViewFactory,
     IManageItemViewFactory,
     ILoggingFactory,
 )
-from todo.interfaces.todo_file import IFileService
-from todo.interfaces.todo_list import IListUiService
-from todo.models.todo_file import TodoItem, TodoList
+from todo_list.interfaces.todo_file import IFileService
+from todo_list.interfaces.todo_list import IListUiService
+from todo_list.models.todo import TodoItem, TodoList
 
 
 def extract_id(event, key) -> UUID:

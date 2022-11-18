@@ -1,9 +1,9 @@
 from abc import ABCMeta, abstractmethod
 from logging import Logger
 
-from todo.constants import LogLevel
-from todo.models.todo_file import TodoItem, TodoList
-from todo.views.list_view import ManageItemView, ListView
+from todo_list.constants import LogLevel
+from todo_list.models.todo import TodoItem, TodoList
+from todo_list.views.list_view import ManageItemView, ListView
 
 
 class IManageItemViewFactory(metaclass=ABCMeta):
