@@ -4,7 +4,7 @@ from logging import Logger
 from todo_list.constants import TODO_FILE
 from todo_list.decorators import fire_and_forget
 from todo_list.interfaces.factory import ILoggingFactory
-from todo_list.interfaces.todo_file import IFileService
+from todo_list.interfaces.file import IFileService
 from todo_list.models.todo import TodoList
 
 

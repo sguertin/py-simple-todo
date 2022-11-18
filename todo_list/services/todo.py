@@ -11,8 +11,8 @@ from todo_list.interfaces.factory import (
     IManageItemViewFactory,
     ILoggingFactory,
 )
-from todo_list.interfaces.todo_file import IFileService
-from todo_list.interfaces.todo_list import IListUiService
+from todo_list.interfaces.file import IFileService
+from todo_list.interfaces.todo import IListUiService
 from todo_list.models.todo import TodoItem, TodoList
 
 
