@@ -1,0 +1,7 @@
+from dataclasses import dataclass
+import FreeSimpleGUI as sg
+
+@dataclass
+class GuiWindow:
+    window: sg.Window
+    layout: list

@@ -1,12 +1,12 @@
 # py-simple-todo
 
-A simple todo app built using Python and PySimpleGUI
+A simple todo app built using Python and FreeSimpleGUI
 
 ## Dependencies
 
 ```py
-dataclasses-json==0.5.6
-PySimpleGUI==4.57.0
-black==22.1.0
-rich==12.2.0
+aiofiles==24.1.0
+dataclasses_json==0.6.7
+FreeSimpleGUI==5.2.0.post1
+rich==4.1.0
 ```
