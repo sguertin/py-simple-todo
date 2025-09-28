@@ -4,6 +4,7 @@ from typing import Self
 from mixins.dataclass_json import CustomDataClassJsonMixin
 
 SETTINGS_FILENAME = "todo-settings.json"
+DEFAULT_THEME = 'DarkGrey14'
 
 @dataclass
 class AppSettings(CustomDataClassJsonMixin):
@@ -25,5 +26,6 @@ class AppSettings(CustomDataClassJsonMixin):
         },
         default=Path.cwd() / SETTINGS_FILENAME,
     )
+    theme: str = DEFAULT_THEME
     async def reload(self)->Self:
         return await self.read_file(self.settings_file_path)
