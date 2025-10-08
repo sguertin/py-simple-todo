@@ -1,14 +1,8 @@
 from models.todo import TodoItem
-
+from constants.events import ADD_EVENT, SAVE_EVENT, EDIT_EVENT, DELETE_EVENT, EXIT_EVENT, VERSION_EVENT
+from constants.icons import EDIT_ICON, DELETE_ICON
 from rich import print
 import FreeSimpleGUI as sg
-
-ADD_EVENT = '-ADD-'
-SAVE_EVENT = '-SAVE-'
-EDIT_EVENT = '-EDIT-'
-DELETE_EVENT = '-DEL-'
-EXIT_EVENT = 'Exit'
-VERSION_EVENT = 'Version'
 
 TODO_LIST_ID = '-TODO LIST-'
 ROW_ID = '-ROW-'
@@ -18,12 +12,10 @@ DEFAULT_TEXT = 'Get Something Done!'
 SMALL_COLUMN_SIZE = (4, 1)
 MEDIUM_COLUMN_SIZE = (25, 1)
 LARGE_COLUMN_SIZE = (55, 1)
-DEFAULT_FONT_SIZE = 'Delugia 15'
-COLUMN_FONT_SIZE = 'Delugia 12'
+DEFAULT_FONT_CONFIG = 'Delugia 15'
+COLUMN_FONT_CONFIG = 'Delugia 12'
 THEME = 'DarkGrey14'
-SAVE_ICON = ''
-EDIT_ICON = ''
-DELETE_ICON = ''
+
 def make_todo_item(todo_item: TodoItem)->list:
     row =  [sg.pin(sg.Column([[
         sg.Text(f'{todo_item.id}.', size=SMALL_COLUMN_SIZE), 
@@ -38,7 +30,7 @@ def make_todo_item(todo_item: TodoItem)->list:
 def make_window()->sg.Window:
 
     layout = [  
-                [sg.Text('Todo Items', font=DEFAULT_FONT_SIZE)],
+                [sg.Text('Todo Items', font=DEFAULT_FONT_CONFIG)],
                 [sg.Column([make_todo_item(TodoItem(1, DEFAULT_TEXT))], key=TODO_LIST_ID)],
                 [
                     sg.Button('New Todo', key=ADD_EVENT, tooltip='Create a new todo item'),
@@ -49,7 +41,7 @@ def make_window()->sg.Window:
 
     right_click_menu = [[''], ['Version', EXIT_EVENT]]
 
-    window = sg.Window('My Todo List', layout,  right_click_menu=right_click_menu, use_default_focus=False, font=DEFAULT_FONT_SIZE, metadata=1)
+    window = sg.Window('My Todo List', layout,  right_click_menu=right_click_menu, use_default_focus=False, font=DEFAULT_FONT_CONFIG, metadata=1)
 
     return window
 
