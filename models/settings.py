@@ -27,5 +27,3 @@ class AppSettings(CustomDataClassJsonMixin):
         default=Path.cwd() / SETTINGS_FILENAME,
     )
     theme: str = DEFAULT_THEME
-    async def reload(self)->Self:
-        return await self.read_file(self.settings_file_path)

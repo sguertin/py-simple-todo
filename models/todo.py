@@ -16,11 +16,11 @@ class TodoItem(CustomDataClassJsonMixin):
     description: str = EMPTY
     category: str = EMPTY
     notes: str = EMPTY
-    file_path: Optional[Path] = field(
+    file_path: Path = field(
         metadata={'dataclasses_json': {
             'encoder': str,
             'decoder': Path
-        }}, default=None
+        }}, default=Path("1.todo")
     )
     done: bool = False
     due_date: Optional[datetime] = field(
@@ -42,15 +42,5 @@ class TodoItem(CustomDataClassJsonMixin):
         }}, default=datetime.now()
     )
     
-    async def write(self, file_path: Optional[Path] = None)->None:
-        if file_path is not None:
-            self.file_path = file_path
-        if self.file_path is None:
-            raise ValueError("Must specify a file_path!")
-        async with aiofiles.open(self.file_path, 'w+') as f:
-            await f.write(self.to_json())
-    
-    @classmethod
-    async def read_file(cls, file_path: Path) -> 'TodoItem':
-        async with aiofiles.open(file_path, 'r+') as f:
-            return cls.from_json(await f.read())
+    def __eq__(self, other: 'TodoItem')->bool:
+        return self.id == other.id

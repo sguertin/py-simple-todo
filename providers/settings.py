@@ -1,6 +1,9 @@
 from asyncio import run
 from pathlib import Path
 from threading import Lock
+
+import aiofiles
+
 from models.settings import AppSettings, SETTINGS_FILENAME
 
 STARTUP_DIR = Path.cwd()
@@ -8,6 +11,11 @@ STARTUP_DIR = Path.cwd()
 class SettingsProvider:
     _settings: AppSettings
     _lock = Lock()
+    _file_lock = Lock()
+    
+    @property    
+    def settings(self)->AppSettings:
+        return self._settings
     
     def __new__(cls):
         with cls._lock:
@@ -32,14 +40,13 @@ class SettingsProvider:
             await self.save_settings(self._settings)
         
     async def reload(self)->None:
-        await self._settings.reload()
+        with self._file_lock:
+            async with aiofiles.open(self._settings.file_path, 'r+') as f:
+                self._settings = AppSettings.from_json(await f.read())
         
-    def get_settings(self)->AppSettings:
-        return self._settings
-    
     async def save_settings(self, settings: AppSettings) -> None:
-        with self._lock:
-            self._settings = settings        
-            await settings.write()
+        with self._file_lock:
+            async with aiofiles.open(settings.file_path, 'w+') as f:
+                await f.write(settings.to_json())
 
 run(SettingsProvider._new(STARTUP_DIR))
